@@ -46,7 +46,7 @@ export default class AddItemWebPart extends BaseClientSideWebPart<IAddItemWebPar
       AddItem,
       {
         description: this.properties.description,
-        webURL:this.context.pageContext.web.absoluteUrl,
+        // webURL:this.context.pageContext.web.absoluteUrl,
         context:this.context
       }
     );

@@ -4,9 +4,13 @@ export interface IAddItemProps {
   // isDarkTheme: boolean;
   // environmentMessage: string;
   // hasTeamsContext: boolean;
-  // userDisplayName: string;
-  description: string;
-  context: WebPartContext;
-  webURL:string;
+
+    description: string;
+    context: any;
+
+ 
+  // description: string;
+  // context: WebPartContext;
+  // webURL:string;
 
 }

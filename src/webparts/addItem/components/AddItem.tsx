@@ -11,8 +11,14 @@ import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
+import {
+  SPHttpClient,
+  SPHttpClientResponse
+} from '@microsoft/sp-http';
+
 
 export default class AddItem extends React.Component<IAddItemProps, {}> {
+
   public render(): React.ReactElement<IAddItemProps> {
     const {
       description,
@@ -22,8 +28,13 @@ export default class AddItem extends React.Component<IAddItemProps, {}> {
       // hasTeamsContext,
       // userDisplayName
     } = this.props;
-    
-  
+    const{
+      Title,
+      Priority,
+      Status,
+    Assigned to,
+  Issueloggedby}
+      =this.state
     return (
       <section className={`${styles.addItem}`}>
         <div className={styles.welcome}>
@@ -39,77 +50,60 @@ export default class AddItem extends React.Component<IAddItemProps, {}> {
           </p>
           <h4>Learn more about SPFx development:</h4>
          <button onClick={()=>this.createItem()}>ADD Item</button><br/>
-         <button onClick={()=>this.getAllItems()}>get Item</button>
+         {/* <button onClick={()=>this.getAllItems()}>get Item</button> */}
         </div>
       </section>
     );
   }
   public async componentDidMount() {
-    // await this.fetchData();
+   await this.updateData();
+  }
+  updateData() {
+//here we need to update random values
+    
   }
 
-  // public async fetchData() {
-   
-  //   let web = Web(this.props.webURL);
-  //   const items: any[] = await web.lists.getByTitle("Sample List").items.select("*").expand().get();
-  //   console.log(items);
-  //   this.setState({ Items: items });
-  //   let html = await this.getHTML(items);
-  //   this.setState({ HTML: html });
-  // }
-  private getAllItems = async () => {
-    try {
-      const items: any[] = await sp.web.lists.getByTitle("Sample List").items.get();
-      console.log(items);
-      if (items.length > 0) {
-        var html = `<table><tr><th>Title</th><th>Description</th><th>Status</th></tr>`;
-        items.map((item, index) => {
-          html += `<tr><td>${item.Title}</td><td>${item.Description}</td><td>${item.Status}</td></li>`;
-        });
-        html += `</table>`;
-        document.getElementById("allItems").innerHTML = html;
-      } else {
-        alert(`List is empty.`);
-      }
-    }
-    catch (e) {
-      console.error(e);
-    }
-  }
+  
+ 
   private createItem = async () => {
-    try {
-      for(var i=1;i<=100;i++){
-      const addItem = await sp.web.lists.getByTitle("Sample List").items.add({
-        'Title': 'row '+i,
-        'Description': 'row Description'+i,
-        
+   
+
+    const body: string = JSON.stringify({
+      'Title': 'New Title',
+      'Description': 'New description',
+      'Priority':'High',
+      // 'Issueloggedby':'Rahul Kashyap'
+    });
+  
+    this.props.context.spHttpClient.post(`${this.props.context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('Sample List')/items`,
+      SPHttpClient.configurations.v1, {
+      headers: {
+        'Accept': 'application/json;odata=nometadata',
+        'Content-type': 'application/json;odata=nometadata',
+        'odata-version': ''
+      },
+      body: body
+    })
+  
+      .then((response: SPHttpClientResponse) => {
+        if (response.ok) {
+          response.json().then((responseJSON) => {
+            console.log(responseJSON);
+            alert(`Item created successfully with ID: ${responseJSON.ID}`);
+          });
+        } else {
+          response.json().then((responseJSON) => {
+            console.log(responseJSON);
+            alert(`Something went wrong! Check the error in the browser console.`);
+          });
+        }
+      }).catch((error: any) => {
+        console.log(error);
       });
-      console.log(addItem);
-      alert(`Item created successfully with ID: ${addItem.data.ID}`);
-    }
   }
-    catch (e) {
+
+    catch (e: any) {
       console.error(e);
     }
   }
-  // public async AddItem(){
-  //   // const sp = new spfi().using("https://sites.ey.com/sites/testcanda");
-  //  let web = Web(this.context.pageContext.web.absoluteUrl);
-    
-  //   for(var i=0;i<10;i++){
-  //     await web.lists.getByTitle("Sample List").items.add({
-  //         'Title':'row'+i ,
-  //         'Description':'row description'+i ,
-  //         'Status':"random",
-  //         'Priority':"Critical",
-  //         // Issueloggedby:"geethika chennuri"
-    
-  //       }).then(i => {
-  //         console.log(i);
-  //       });
-  //     }
-  //       alert("Created Successfully");
-  //       // this.setState({EmployeeName:"",HireDate:null,JobDescription:""});
-  //       // this.fetchData();
-  // }
-}
+  
