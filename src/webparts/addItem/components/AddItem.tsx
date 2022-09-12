@@ -2,11 +2,7 @@ import * as React from 'react';
 import styles from './AddItem.module.scss';
 import { IAddItemProps } from './IAddItemProps';
 import { escape, random } from '@microsoft/sp-lodash-subset';
-// import { Web, IWeb, sp } from "@pnp/sp/presets/all";
-// import {sp} from "@pnp/sp/"'
-// import { Web, ItemAddResult } from "@pnp/sp";
-// import "@pnp/sp/lists";
-// import "@pnp/sp/items";
+import {useState} from 'react';
 import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
@@ -28,13 +24,14 @@ export default class AddItem extends React.Component<IAddItemProps, {}> {
       // hasTeamsContext,
       // userDisplayName
     } = this.props;
-    const{
-      Title,
-      Priority,
-      Status,
-    Assigned to,
-  Issueloggedby}
-      =this.state
+    const [Title,randomTitle]=useState(0);
+    const [Description,randomDescription]=useState(0);
+    const [Priority,randomPriority]=useState(0);
+    const [Status,randomStatus]=useState(0);
+    const [AssignedTo,randomAssignedTo]=useState(0);
+    const [Issueloggedby,randomIssueloggedby]=useState(0);
+  var Prioities=['Critical','High','Normal','Low'];
+  var Statuses=['Blocked','By design',"Won't fix",'New','In progress','Completed','Duplicate'];
     return (
       <section className={`${styles.addItem}`}>
         <div className={styles.welcome}>
@@ -59,7 +56,8 @@ export default class AddItem extends React.Component<IAddItemProps, {}> {
    await this.updateData();
   }
   updateData() {
-//here we need to update random values
+    //here we need to update random values
+    
     
   }
 
