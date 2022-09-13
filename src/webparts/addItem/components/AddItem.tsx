@@ -11,8 +11,15 @@ import {
   SPHttpClient,
   SPHttpClientResponse
 } from '@microsoft/sp-http';
-
-
+// var Priorities=['Critical','High','Normal','Low'];
+// var Statuses=['Blocked','By design',"Won't fix",'New','In progress','Completed','Duplicate'];
+// const [Priority,randomPriority]=useState(0);
+// const [Title,randomTitle]=useState(0);
+//     const [Description,randomDescription]=useState(0);
+    
+//     const [Status,randomStatus]=useState(0);
+//     const [AssignedTo,randomAssignedTo]=useState(0);
+//     const [Issueloggedby,randomIssueloggedby]=useState(0);
 export default class AddItem extends React.Component<IAddItemProps, {}> {
 
   public render(): React.ReactElement<IAddItemProps> {
@@ -24,14 +31,8 @@ export default class AddItem extends React.Component<IAddItemProps, {}> {
       // hasTeamsContext,
       // userDisplayName
     } = this.props;
-    const [Title,randomTitle]=useState(0);
-    const [Description,randomDescription]=useState(0);
-    const [Priority,randomPriority]=useState(0);
-    const [Status,randomStatus]=useState(0);
-    const [AssignedTo,randomAssignedTo]=useState(0);
-    const [Issueloggedby,randomIssueloggedby]=useState(0);
-  var Prioities=['Critical','High','Normal','Low'];
-  var Statuses=['Blocked','By design',"Won't fix",'New','In progress','Completed','Duplicate'];
+    
+
     return (
       <section className={`${styles.addItem}`}>
         <div className={styles.welcome}>
@@ -46,31 +47,44 @@ export default class AddItem extends React.Component<IAddItemProps, {}> {
             The SharePoint Framework (SPFx) is a extensibility model for Microsoft Viva, Microsoft Teams and SharePoint. It&#39;s the easiest way to extend Microsoft 365 with automatic Single Sign On, automatic hosting and industry standard tooling.
           </p>
           <h4>Learn more about SPFx development:</h4>
-         <button onClick={()=>this.createItem()}>ADD Item</button><br/>
+         <button onClick={()=>this.AddItem()}>ADD Item</button><br/>
          {/* <button onClick={()=>this.getAllItems()}>get Item</button> */}
         </div>
       </section>
     );
   }
-  public async componentDidMount() {
-   await this.updateData();
+  AddItem(): void {
+  for(var i=1;i<5;i++){
+    this.createItem(i)
   }
-  updateData() {
-    //here we need to update random values
-    
+  alert(`Item created successfully`);
+  
+  }
+  public async componentDidMount() {
+   await this.randomPriority();
+ 
+  }
+  randomPriority() {
+  //   //here we need to update random values
+  var Priorities=['Critical','High','Normal','Low'];
+ var Priority= Priorities[Math.floor(Math.random()*Priorities.length)]
+ console.log(Priority) 
+ return Priority
     
   }
 
   
  
-  private createItem = async () => {
+  private createItem = async (i:any) => {
    
 
     const body: string = JSON.stringify({
-      'Title': 'New Title',
-      'Description': 'New description',
-      'Priority':'High',
-      // 'Issueloggedby':'Rahul Kashyap'
+      'Title': 'New Ticket '+i,
+      'Description': ' Description of Ticket'+i,
+       'Priority':this.randomPriority,
+      // 'Status':'In progress',
+    //   'Assignedto':Chennuri.Geethika@gds.ey.com,
+    //  'Issueloggedby':'Chennuri.Geethika@gds.ey.com'
     });
   
     this.props.context.spHttpClient.post(`${this.props.context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('Sample List')/items`,
@@ -86,13 +100,13 @@ export default class AddItem extends React.Component<IAddItemProps, {}> {
       .then((response: SPHttpClientResponse) => {
         if (response.ok) {
           response.json().then((responseJSON) => {
-            console.log(responseJSON);
-            alert(`Item created successfully with ID: ${responseJSON.ID}`);
+            // console.log(responseJSON);
+            // alert(`Item created successfully with ID: ${responseJSON.ID}`);
           });
         } else {
           response.json().then((responseJSON) => {
-            console.log(responseJSON);
-            alert(`Something went wrong! Check the error in the browser console.`);
+            // console.log(responseJSON);
+            // alert(`Something went wrong! Check the error in the browser console.`);
           });
         }
       }).catch((error: any) => {
